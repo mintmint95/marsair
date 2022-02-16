@@ -1,0 +1,6 @@
+{
+  "integrationFolder": "cypress/integration/tests",
+  "viewportWidth": 1920,
+  "viewportHeight": 1080,
+  "failOnStatusCode": false
+}
