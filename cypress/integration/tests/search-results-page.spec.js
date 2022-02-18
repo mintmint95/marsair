@@ -31,15 +31,17 @@ describe('Search results page', () => {
   })
 
   it('[TC_Story#2_1] Be able to show the search result properly when - The users enter valid promotion codes. *Option: 1', () => {
-    const promoCode = 'AF3-FJK-418'
-    cy.visit(Cypress.env('host'))
-    cy.get('#departing').select('July', { force: true })
-    cy.get('#returning').select('December (two years from now)', { force: true })
-    cy.get('#promotional_code').type(promoCode)
-    cy.contains('Search').click()
+    let promoCode = ['AF3-FJK-418', 'MM7-INT-119', 'OO0-OOO-000']
+    for (let data of promoCode) {
+      cy.visit(Cypress.env('host'))
+      cy.get('#departing').select('July', { force: true })
+      cy.get('#returning').select('December (two years from now)', { force: true })
+      cy.get('#promotional_code').type(data)
+      cy.contains('Search').click()
 
-    // Search results page from AC
-    cy.get('.promo_code').should('contain', `Promotional code ${promoCode} used: 30% discount!`)
+      // Search results page from AC
+      cy.get('.promo_code').should('contain', `Promotional code ${data} used: ${data.charAt(2)}0% discount!`)
+    }
   })
 
   it.skip('[TC_Story#2_1] Be able to show the search result properly when - The users enter valid promotion codes. *Option: 2', () => {
@@ -49,9 +51,9 @@ describe('Search results page', () => {
     //   console.log(x)
     // })
 
-    console.log('qewqeqweqweqwqwqewq')
+    console.log('test')
 
-    console.log('wtf : ', promoCodexx.then(console.log))
+    console.log('Randome Promo : ', promoCodexx.then(console.log))
     // let promotionalCode = randomPromotionCode(true)
     // console.log(promotionalCode)
     // let promotionalCode = cy.randomPromotionCode()
@@ -59,15 +61,17 @@ describe('Search results page', () => {
   })
 
   it('[TC_Story#2_4] Be able to show an error message when the users enter invalid promotion codes when - Promo Code is invalid format (Case: Condition of Promo Code digit is not match)', () => {
-    const promoCode = 'MM7-INT-118'
-    cy.visit(Cypress.env('host'))
-    cy.get('#departing').select('July', { force: true })
-    cy.get('#returning').select('December (two years from now)', { force: true })
-    cy.get('#promotional_code').type(promoCode)
-    cy.contains('Search').click()
+    let promoCode = ['MM7-INT-118', 'JJ5-OPQ-320', 'JJ5-OPQ-3210', 'JJ5-OPQ-3211']
+    for (let data of promoCode) {
+      cy.visit(Cypress.env('host'))
+      cy.get('#departing').select('July', { force: true })
+      cy.get('#returning').select('December (two years from now)', { force: true })
+      cy.get('#promotional_code').type(data)
+      cy.contains('Search').click()
 
-    // Search results page from AC
-    cy.get('.promo_code').should('contain', `Sorry, code ${promoCode} is not valid`)
+      // Search results page from AC
+      cy.get('.promo_code').should('contain', `Sorry, code ${data} is not valid`)
+    }
   })
 
   it('[TC_Story#2_5] Be able to show an error message when the users enter invalid promotion codes when - Promo Code is invalid format (Case: More max length 255)', () => {
@@ -84,15 +88,17 @@ describe('Search results page', () => {
   })
 
   it('[TC_Story#2_6] Be able to show an error message when the users enter invalid promotion codes when - Promo Code is invalid format (Case: Enter special characters)', () => {
-    const promoCode = 'MM7#INT#119'
-    cy.visit(Cypress.env('host'))
-    cy.get('#departing').select('July', { force: true })
-    cy.get('#returning').select('December (two years from now)', { force: true })
-    cy.get('#promotional_code').type(promoCode)
-    cy.contains('Search').click()
+    let promoCode = ['MM7#INT#119', 'AF3-----418', 'AF3-FJK-418------8', 'MM7/INT/119', 'MM7|INT|119', 'MM7 INT 119']
+    for (let data of promoCode) {
+      cy.visit(Cypress.env('host'))
+      cy.get('#departing').select('July', { force: true })
+      cy.get('#returning').select('December (two years from now)', { force: true })
+      cy.get('#promotional_code').type(data)
+      cy.contains('Search').click()
 
-    // Search results page from AC
-    cy.get('.promo_code').should('contain', `Sorry, code ${promoCode} is not valid`)
+      // Search results page from AC
+      cy.get('.promo_code').should('contain', `Sorry, code ${data} is not valid`)
+    }
   })
 
   it('[TC_Story#4_2] Be able to show an error message when selecting the return date is less than 1 year from the departure.', () => {
@@ -108,63 +114,70 @@ describe('Search results page', () => {
 })
 
 // function randomPromotionCode(isNotSum2digit) {
-//   return new Promise((resolve) => {
-//     let checksum = Math.floor(0 + Math.random() * 999) + '' // 123, 456, '1', '12'
-//   console.log(checksum)
-//   let sum = 0
-//   for (let i = 0; i < 3; i++) {
-//     // 1+ 2 + 3 = 6
-//     // 4 + 5 + 6 = 15
-//     sum += +(checksum.charAt(i))
-//   }
-
-//   if (isNotSum2digit) {
-//     if (sum >= 10) {
-//       // 4 + 5 + 6 = 15
-//       // Random again
-//       randomPromotionCode(isNotSum2digit)
-//       return
+//   return new Promise((resolve, reject) => {
+//     let checksum = Math.floor(0 + Math.random() * 999) + ''
+//     console.log(checksum)
+//     let sum = 0
+//     for (let i = 0; i < 3; i++) {
+//       sum += +(checksum.charAt(i))
 //     }
-//   }
 
-//   let resp = []
-//   for (let i = 0; i < 3; i++) {
-//     if (checksum.charAt(i) === '') {
-//       resp.push(0)
+//     // if (isNotSum2digit) {
+//     //   if (sum >= 10) {
+//     //     randomPromotionCode(isNotSum2digit)
+//     //     reject()
+//     //     return
+//     //   }
+//     // }
+
+//     if (sum < 10) {
+//       let resp = []
+//       for (let i = 0; i < 3; i++) {
+//         if (checksum.charAt(i) === '') {
+//           resp.push(0)
+//         } else {
+//           resp.push(+checksum.charAt(i))
+//         }
+//       }
+
+//       resp.push(sum)
+//       console.log('success :: ', resp)
+
+//       // set 1
+
+//       let set1 = ''
+//       for (let i = 0; i < 3; i++) {
+//         if (i === 2) {
+//           set1 += resp[0]
+//         } else {
+//           set1 += String.fromCharCode(Math.floor(Math.random() * (90 - 65)) + 65)
+//         }
+//       }
+
+//       // set 2
+//       let set2 = ''
+//       for (let i = 0; i < 3; i++) {
+//         set2 += String.fromCharCode(Math.floor(Math.random() * (90 - 65)) + 65)
+//       }
+
+//       let set3 = ''
+//       for (let i = 1; i <= 3; i++) {
+//         set3 += resp[i]
+//       }
+
+//       console.log(`${set1}-${set2}-${set3}`)
+//       resolve({ code: `${set1}-${set2}-${set3}` })
 //     } else {
-//       resp.push(+checksum.charAt(i))
+//       resolve({ code: `XX1-XXX-001` })
 //     }
-//   }
-//   // [1, 0, 0, 1]
-//   // [1, 2, 0, 3]
 
-//   resp.push(sum)
-//   //console.log('success :: ', resp) // [1, 0, 0, 1]
-
-//   // set 1
-//   let set1 = ''
-//   for (let i = 0; i < 3; i++) {
-//     if (i === 2) {
-//       set1 += resp[0]
-//     } else {
-//       set1 += String.fromCharCode(Math.floor(Math.random() * (90 - 65)) + 65)
-//     }
-//   }
-
-//   // set 2
-//   let set2 = ''
-//   for (let i = 0; i < 3; i++) {
-//     set2 += String.fromCharCode(Math.floor(Math.random() * (90 - 65)) + 65)
-//   }
-
-//   // set 3
-//   let set3 = ''
-//   for (let i = 1; i <= 3; i++) {
-//     set3 += resp[i]
-//   }
-
-//   //console.log(`${set1}-${set2}-${set3}`)
-//     // return `${set1}-${set2}-${set3}`
-//     resolve(`${set1}-${set2}-${set3}`)
 //   })
+
 // }
+
+// describe('Async functions', () => {
+//   it('should wait for promises to resolve', async () => {
+//     let x = await randomPromotionCode()
+//     console.log(x.code)
+//   })
+// })
